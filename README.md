@@ -13,3 +13,6 @@ Set the following environment variables:
 - `LEASEWEB_API_TOKEN` - API token for Leaseweb DNS
 
 Install dependencies and run `python -m homeip.main`.
+
+On startup the tool lists the current DNS records for the configured domain to
+confirm that the API credentials are valid.

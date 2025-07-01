@@ -1,6 +1,6 @@
 import os
 import requests
-from dns_provider import DNSProvider
+from ..dns_provider import DNSProvider
 
 
 class LeasewebDNSProvider(DNSProvider):
@@ -24,3 +24,9 @@ class LeasewebDNSProvider(DNSProvider):
         payload = {"content": ip_address, "type": "A", "name": record}
         response = requests.put(url, json=payload, headers=self._headers())
         response.raise_for_status()
+
+    def list_records(self, domain: str):
+        url = f"{self.BASE_URL}/domains/{domain}/records"
+        response = requests.get(url, headers=self._headers())
+        response.raise_for_status()
+        return response.json()
