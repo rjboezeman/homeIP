@@ -2,7 +2,7 @@ import os
 import time
 import requests
 
-from homeip.dns_providers import LeasewebDNSProvider
+from dns_providers import LeasewebDNSProvider
 
 
 CHECK_INTERVAL = int(os.getenv("CHECK_INTERVAL", "300"))

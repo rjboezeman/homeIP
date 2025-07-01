@@ -1,6 +1,6 @@
 import os
 import requests
-from homeip.dns_provider import DNSProvider
+from dns_provider import DNSProvider
 
 
 class LeasewebDNSProvider(DNSProvider):
