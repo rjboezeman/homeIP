@@ -2,7 +2,7 @@ import os
 import time
 import requests
 
-from dns_providers import LeasewebDNSProvider
+from .dns_providers import LeasewebDNSProvider
 
 
 CHECK_INTERVAL = int(os.getenv("CHECK_INTERVAL", "300"))
@@ -25,6 +25,12 @@ def main():
         raise ValueError(f"Unsupported DNS provider: {DNS_PROVIDER}")
 
     provider = LeasewebDNSProvider()
+
+    try:
+        records = provider.list_records(DOMAIN)
+        print("Current DNS records:", records)
+    except Exception as exc:
+        print(f"Error retrieving DNS records: {exc}")
 
     last_ip = None
     while True:
