@@ -6,7 +6,7 @@ from ..dns_provider import DNSProvider
 class LeasewebDNSProvider(DNSProvider):
     """DNS Provider implementation for Leaseweb."""
 
-    BASE_URL = "https://api.leaseweb.com/v1"
+    BASE_URL = "https://api.leaseweb.com/hosting/v2"
 
     def __init__(self) -> None:
         self.token = os.getenv("LEASEWEB_API_TOKEN")
@@ -15,18 +15,25 @@ class LeasewebDNSProvider(DNSProvider):
 
     def _headers(self):
         return {
-            "Authorization": f"Bearer {self.token}",
+            "X-LSW-Auth": self.token,
             "Content-Type": "application/json",
         }
 
-    def update_record(self, domain: str, record: str, ip_address: str) -> None:
-        url = f"{self.BASE_URL}/domains/{domain}/records/{record}"
-        payload = {"content": ip_address, "type": "A", "name": record}
+    def update_A_record(self, domain: str, fqdn: str, ip_address: str, record_type: str = "A", ttl: int = 60) -> None:
+        """Update an A/AAAA record for a given fully qualified domain name (FQDN)."""
+        fqdn = fqdn.rstrip(".") + "."  # Ensure trailing dot per Leaseweb API requirement
+        url = f"{self.BASE_URL}/domains/{domain}/resourceRecordSets/{fqdn}/{record_type}"
+
+        payload = {
+            "content": [ip_address],
+            "ttl": ttl
+        }
+
         response = requests.put(url, json=payload, headers=self._headers())
         response.raise_for_status()
 
     def list_records(self, domain: str):
-        url = f"{self.BASE_URL}/domains/{domain}/records"
+        url = f"{self.BASE_URL}/domains/{domain}/resourceRecordSets"
         response = requests.get(url, headers=self._headers())
         response.raise_for_status()
         return response.json()

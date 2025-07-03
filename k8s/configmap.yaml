@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dns-updater-cm
+  namespace: home-ip  # Change if needed
+data:
+  DNS_PROVIDER: leaseweb
+  DNS_DOMAIN: example.com
+  DNS_RECORD: router
