@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dns-updater
+  labels:
+    app: dns-updater
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: dns-updater
+  template:
+    metadata:
+      labels:
+        app: dns-updater
+    spec:
+      containers:
+        - name: dns-updater
+          image: rjboezeman/home-ip:v0.3
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: dns-updater-cm
+          env:
+            - name: LEASEWEB_API_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: leaseweb-api-token
+                  key: LEASEWEB_API_TOKEN
